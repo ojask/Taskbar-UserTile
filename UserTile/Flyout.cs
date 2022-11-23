@@ -540,12 +540,6 @@ namespace UserTile
         public Flyout()
         {
             InitializeComponent();
-            DisplayWeather();
-            Timer timer1 = new Timer();
-            timer1.Interval = 1;
-            timer1.Enabled = true;
-            timer1.Start();
-            timer1.Tick += Timer1_Tick;
             label3.Text = Environment.MachineName;
             label2.Text = Environment.UserName;
             label4.Text = DateTime.Now.ToString("hh:mm tt") + ", " + DateTime.Now.ToString("MMM dd");
@@ -554,11 +548,6 @@ namespace UserTile
             timer.Enabled = true;
             timer.Start();
             timer.Tick += new EventHandler(timer_Tick);
-        }
-
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-            DisplayWeather();
         }
 
         public void timer_Tick(object sender, EventArgs e)
@@ -577,6 +566,7 @@ namespace UserTile
             {
                 pictureBox1.Visible = false;
             }
+            DisplayWeather();
 
 
         }
