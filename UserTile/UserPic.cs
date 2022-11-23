@@ -1,22 +1,24 @@
 ﻿namespace UserTile
 {
-    using AxWMPLib;
     using System;
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
-    using System.Reflection;
     using System.Windows.Forms;
-    using WMPLib;
     using System.Runtime.InteropServices;
     using System.Text;
 
     public class UserPic : UserControl
     {
+        private AppWeather.Model.WeatherModel.RootObject data;
+        private AppWeather.Model.LocationModel.RootObject LocationData;
         private IContainer components = null;
         private ContextMenuStrip contextMenu;
         private readonly PictureBox picture;
         private ToolStripMenuItem toolStripMenuItem1;
+
+        [DllImport("wininet.dll")]
+        private extern static bool InternetGetConnectedState(out int Description, int ReservedValue);
 
         [DllImport("Shell32.dll", EntryPoint = "#261", CharSet = CharSet.Unicode, PreserveSig = false)]
         public static extern void GetUserTilePath(string username, uint whatever, StringBuilder picpath, int maxLength);
@@ -31,10 +33,83 @@
         {
             return Image.FromFile(GetUserTilePath(username));
         }
+        public void prepareWeatherToDisplay()
+        {
+            if (!File.Exists("cityName.txt"))
+            {
+                LocationData = AppWeather.Api.LocationApi.getCityCoords("London");
+                string latitude = LocationData.results.latitude.ToString();
+                string longitude = LocationData.results.longitude.ToString();
+                data = AppWeather.Api.WeatherApi.getOneDayWeather(latitude, longitude);
+            }
+            else
+            {
+                string CityName = File.ReadAllText("cityName.txt");
+                LocationData = AppWeather.Api.LocationApi.getCityCoords(CityName);
+                string latitude = LocationData.results.latitude.ToString();
+                string longitude = LocationData.results.longitude.ToString();
+                data = AppWeather.Api.WeatherApi.getOneDayWeather(latitude, longitude);
+            }
+
+        }
+        public static bool IsConnectedToInternet()
+        {
+            int Desc;
+            return InternetGetConnectedState(out Desc, 0);
+        }
+
+        public void UpdateWeather()
+        {
+            if (IsConnectedToInternet())
+            {
+                var MyIni = new IniFile("Weather.ini");
+
+                prepareWeatherToDisplay();
+                if (data != null)
+                {
+                    if (!File.Exists("cityName.txt"))
+                    {
+                        MyIni.Write("City", "London");
+                    }
+                    else
+                    {
+                        string city = File.ReadAllText("cityName.txt");
+
+                        MyIni.Write("City", city);
+                    }
+                    string wind = data.current_weather.windspeed.ToString();
+                    string temp = data.current_weather.temperature.ToString();
+                    string timeString = data.current_weather.time.ToString();
+                    string WeatherCode = data.current_weather.weathercode.ToString();
+                    int Last = timeString.LastIndexOf(timeString);
+                    int First = timeString.IndexOf(timeString);
+                    timeString = timeString.Remove(0, 11);
+                    timeString = timeString.Remove(2, 3);
+                    MyIni.Write("Wind", wind);
+                    MyIni.Write("temp", temp);
+                    MyIni.Write("time", timeString);
+                    MyIni.Write("WCode", WeatherCode);
+                }
+                if (data == null)
+                {
+                    MyIni.Write("Wind", "");
+                    MyIni.Write("temp", "Invalid City name");
+                    MyIni.Write("time", "");
+                    MyIni.Write("WCode", "404");
+                }
+
+            }
+        }
 
         public UserPic()
         {
             this.InitializeComponent();
+            Timer timer1 = new Timer();
+            timer1.Interval = 3600000;
+            timer1.Enabled = true;
+            timer1.Start();
+            timer1.Tick += Timer1_Tick;
+            UpdateWeather();
             this.picture = new PictureBox();
             this.picture.Width = base.Width - 2;
             this.picture.Height = base.Height - 2;
@@ -49,7 +124,11 @@
             timer.Enabled = true;
             timer.Start();
             timer.Tick += new EventHandler(timer_Tick);
-            
+        }
+
+        private void Timer1_Tick(object sender, EventArgs e)
+        {
+            UpdateWeather();
         }
 
         void timer_Tick(object sender, EventArgs e)
@@ -102,6 +181,7 @@
         private void PictureMouseClick(object sender, MouseEventArgs e)
         {
             UserTile.Flyout flyout = new Flyout();
+
             flyout.ShowInTaskbar = false;
             if (e.Button == MouseButtons.Left && !flyout.Visible)
             {
