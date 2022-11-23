@@ -281,7 +281,7 @@
             this.label11.BackColor = System.Drawing.Color.Transparent;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.label11.Location = new System.Drawing.Point(100, 2);
+            this.label11.Location = new System.Drawing.Point(100, 1);
             this.label11.Name = "label11";
             this.label11.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.label11.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -297,10 +297,10 @@
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.label10.Location = new System.Drawing.Point(100, 20);
+            this.label10.Location = new System.Drawing.Point(100, 19);
             this.label10.Name = "label10";
-            this.label10.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.label10.Size = new System.Drawing.Size(51, 17);
+            this.label10.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.label10.Size = new System.Drawing.Size(51, 18);
             this.label10.TabIndex = 8;
             this.label10.Text = "Weather";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
