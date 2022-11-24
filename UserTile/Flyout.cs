@@ -578,6 +578,7 @@ namespace UserTile
         private void Flyout_Load(object sender, EventArgs e)
         {
             this.Opacity = 0;
+            DisplayWeather();
         }
 
 

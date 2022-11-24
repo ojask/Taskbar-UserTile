@@ -64,7 +64,6 @@
             {
                 var MyIni = new IniFile("Weather.ini");
 
-                prepareWeatherToDisplay();
                 if (data != null)
                 {
                     if (!File.Exists("cityName.txt"))
@@ -109,7 +108,6 @@
             timer1.Enabled = true;
             timer1.Start();
             timer1.Tick += Timer1_Tick;
-            UpdateWeather();
             this.picture = new PictureBox();
             this.picture.Width = base.Width - 2;
             this.picture.Height = base.Height - 2;
@@ -128,12 +126,14 @@
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            UpdateWeather();
+            prepareWeatherToDisplay();
+
         }
 
         void timer_Tick(object sender, EventArgs e)
         {
             this.picture.Image = GetUserTile(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+            UpdateWeather();
         }
 
         protected override void Dispose(bool disposing)
@@ -222,7 +222,8 @@
 
         private void UserPic_Load(object sender, EventArgs e)
         {
-
+            prepareWeatherToDisplay();
+            UpdateWeather();
         }
     }
 }
