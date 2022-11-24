@@ -105,7 +105,7 @@
         {
             this.InitializeComponent();
             Timer timer1 = new Timer();
-            timer1.Interval = 3600000;
+            timer1.Interval = 1800000;
             timer1.Enabled = true;
             timer1.Start();
             timer1.Tick += Timer1_Tick;
