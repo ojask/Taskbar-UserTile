@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace UserTaskerTile.UserTile
 {
@@ -48,7 +49,8 @@ namespace UserTaskerTile.UserTile
         private void button1_Click(object sender, EventArgs e)
         {
             string Cityname = textBox1.Text;
-            File.WriteAllText("cityName.txt", Cityname[0].ToString().ToUpper() + Cityname.Substring(1));
+            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+            File.WriteAllText("cityName.txt", ti.ToTitleCase(Cityname));
             this.Close();
         }
     }
